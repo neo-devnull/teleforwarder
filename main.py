@@ -1,12 +1,8 @@
 import asyncio
 
 from telethon.sync import TelegramClient, events, errors
-from telethon.tl.functions.channels import InviteToChannelRequest
-from telethon.tl.functions.messages import AddChatUserRequest
-from telethon.tl.types import InputPeerChannel, InputPeerEmpty, InputPeerUser 
-from telethon.tl.functions.messages import GetDialogsRequest
-
 from os import path
+
 import sys
 import configparser
 import csv
@@ -36,8 +32,8 @@ with TelegramClient('name', cfg.api_id, cfg.api_hash) as client:
         chat_settings = cfg.chats.get(chat_id)
 
         #Some vars that we will use later 
-        allowed_types = chat_settings.get('allow',['text','photo'])
-        print(allowed_types)
+        allowed_types = chat_settings.get('allow',['text','photo']) 
+        text_filters = chat_settings.get('text_filters')       
         send_media = False 
         downloaded_file = None  
         
@@ -46,13 +42,21 @@ with TelegramClient('name', cfg.api_id, cfg.api_hash) as client:
         if not event.message.media and not 'text' in allowed_types:
             return False    
 
-        #Check if the message is allowed 
+        #Check if the message media is allowed 
         if event.message.media:
             media_type = functions.get_media_type(event.message)            
             if not media_type in allowed_types:
                 return False
 
             send_media = True             
+
+        #Check if the text is allowed 
+        if text_filters:
+            if not functions.allow_text(event.message.text,text_filters):
+                return False 
+
+
+
 
         #Time to forward/send
         to = int(chat_settings['to'])
@@ -71,10 +75,4 @@ with TelegramClient('name', cfg.api_id, cfg.api_hash) as client:
             os.unlink(downloaded_file)
 
 
-
-
-        
-        
-     
-        
     client.run_until_disconnected()
