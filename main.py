@@ -22,7 +22,7 @@ if not os.path.exists('dl'):
 
 with TelegramClient('name', cfg.api_id, cfg.api_hash) as client:
 
-    @client.on(events.NewMessage(outgoing=True,chats=allowed_chats))
+    @client.on(events.NewMessage(incoming=True,chats=allowed_chats))
     async def handler(event):
         chat_id = str(event.message.chat_id)          
         chat_settings = cfg.chats.get(chat_id)
