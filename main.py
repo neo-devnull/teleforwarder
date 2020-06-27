@@ -1,17 +1,13 @@
-import asyncio
-
 from telethon.sync import TelegramClient, events, errors
 from os import path
 
-import sys
-import configparser
-import csv
-import time
-import logging
-import config as cfg 
+import config as cfg
+import functions 
+import asyncio
+import logging 
 import json 
 import os 
-import functions 
+
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -54,9 +50,6 @@ with TelegramClient('name', cfg.api_id, cfg.api_hash) as client:
         if text_filters:
             if not functions.allow_text(event.message.text,text_filters):
                 return False 
-
-
-
 
         #Time to forward/send
         to = int(chat_settings['to'])
