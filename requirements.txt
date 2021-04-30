@@ -1,6 +1,6 @@
 pkg-resources==0.0.0
 pyaes==1.6.1
 pyasn1==0.4.8
-rsa==4.6
+rsa==4.7
 Telethon==1.14.0
 url-regex==1.0.0
